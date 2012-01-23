@@ -5,66 +5,100 @@ a:active {color:white;}
 
 
 a.donker:link{color:black;}
-
 a.donker:visited {color:black;}
 a.donker:hover {color:black;}
 a.donker:active{color:black;}
 
-
-html
-
-{
-
-height:100%;
-
+.bestel{
+	font-size: 15px;
+	text-align: center;
 }
-body
-{
-height:100%;
-background-color:transparant;
-	
+
+h1{
+	font-family: calibri;
+	color: rgb(119,156,140);
 }
-#logo
-{
-width:240;
-height:74;
-position:relative;
-top: -11px;
-left: 0px;
+
+h2{
+	font-family: calibri;
+	color: rgb(210,92,137);
 }
-#klantblok
-{
-background-image:url('afbeeldingen/welkomblokje.gif');
-background-repeat:no-repeat;
-background-position:right top;
-margin-top:0px;
-margin-bottom:0px;
-margin-right:0px;
-margin-left:0px;
-width:305px;
-height:64px;
-position: relative;
-top: -18px;
-text-align:right;
-padding-right:5px;
-padding-bottom:0px;
-color:white;
-font-family:Impact,Times,sans-serif;
-font-size: 23px;
+
+
+body {
+	background-color:white;
+	background-image:url('afbeeldingen/achtergrond.jpg');
+	background-repeat:repeat-x;
+	background-position:right top;
+	width:1080px;
+        height:100%;
+	margin-left:auto;
+	margin-right:auto;
+	font-family: calibri;
 }
-#klantlinks
-{
+
+
+.Error {
+	color:red;
+	text-align:left;
+}
+.Groot {
+	font-family: calibri;
+	font-size: 20px;
+}
+#midden{
+	margin:auto; 
+	width:60%
+}
+#headerframe {
+	position:relative;
+    	top:-9px;
+}
+
+#footerframe {
+	position:relative;
+	bottom:0px;
+	left:0px;
+}
+
+#logo {
+	width:240;
+	height:74;
+	position:relative;
+	top: -13px;
+	left: 0px;
+}
+
+#klantblok {
+	background-image:url('afbeeldingen/welkomblokje.gif');
+	background-repeat:no-repeat;
+	background-position:right top;
+	margin-top:0px;
+	margin-bottom:0px;
+	margin-right:0px;
+	margin-left:0px;
+	width:305px;
+	height:64px;
+	position: relative;
+	top: -18px;
+	text-align:right;
+	padding-right:5px;
+	padding-bottom:0px;
+	color:white;
+	font-family:Impact,Times,sans-serif;
+	font-size: 23px;
+}
+
+#klantlinks {
 text-align:right;
 color:white;
 font-family:sans-serif;
 font-size: 15px;
 }
 
-#toplijst
-{
+#toplijst {
 background-repeat:center bottom;
 background-image:url('afbeeldingen/toplijstblok.gif');
-
 width:90%;
 text-align:center;
 color:white;
@@ -73,35 +107,38 @@ font-size: 16px;
 position:relative;
 top: -2px;
 }
-#toptabel
-{
+
+#toptabel {
 background-image:url('afbeeldingen/toplijstblok.gif');
 width:100%;
 text-align:center;
 }
-#helepaginadiv
-{
+
+#helepaginadiv {
 position:relative;
 top: -9px;
+font-family: calibri;
 }
-#zoekbalk
-{
+
+#zoekbalk {
 text-align:center;
 position:relative;
 left:20px;
 }
-#productlijst
-{
+
+#productlijst {
 background-color:transparent;
 text-align:center;
 color:black;
-a:link {color:black}
 }
-#onderbanner
-{
-width:100%;
-position:relative;
-background-color: transparent;
-border: 5px solid black;
-bottom:10px;
+#reviewtabel {
+    background-color:#E7E7E7;
+}
+a.productinlijst:link{color:black;text-decoration:none;}
+a.productinlijst:visited {color:black;text-decoration:none;}
+a.productinlijst:hover {color:black;text-decoration:underline;}
+a.productinlijst:active{color:black;text-decoration:none;}
+.productinlijst {
+    font-family:calibri;
+    font-size:20px;
 }
