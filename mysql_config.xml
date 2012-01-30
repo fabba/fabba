@@ -1,0 +1,9 @@
+<?xml version='1.0'?>
+<!-- mysql_config: hieronder staan de inloggegevens van de database
+Plaats dit bestand in de map waar ook de map public_html is geplaatst, zodat connect.php er wel bij kan, maar hackers niet. -->
+<MySQL_INIT>
+   <mysql_host>localhost</mysql_host>
+   <mysql_database>webdb1243</mysql_database>
+   <mysql_username>webdb1243</mysql_username>
+   <mysql_password>wref6uba</mysql_password>
+</MySQL_INIT>

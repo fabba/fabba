@@ -9,6 +9,43 @@ a.donker:visited {color:black;}
 a.donker:hover {color:black;}
 a.donker:active{color:black;}
 
+a.logolink:link {color:white;text-decoration:none;}
+a.logolink:visited {color:white;text-decoration:none;} 
+a.logolink:hover {color:white;text-decoration:none;}
+a.logolink:active {color:white;text-decoration:none;} 
+
+a.categorielink:link {color:white;text-decoration:none;font-size:20px;font-family:calibri;}
+a.categorielink:visited {color:white;text-decoration:none;font-size:20px;font-family:calibri;} 
+a.categorielink:hover {color:white;text-decoration:none;font-size:28px;font-family:calibri;}
+a.categorielink:active {color:white;text-decoration:none;} 
+
+a.ordenlink:link {color:white;text-decoration:none;}
+a.ordenlink:visited {color:white;text-decoration:none;} 
+a.ordenlink:hover {color:white;text-decoration:underline;}
+a.ordenlink:active {color:white;text-decoration:none;}
+
+a.flow:link {color:white;text-decoration:none;}
+a.flow:visited {color:white;text-decoration:none;} 
+a.flow:hover {color:white;text-decoration:underline;}
+a.flow:active {color:white;text-decoration:none;}
+
+
+
+
+
+a.coverflow:link {color:black;text-decoration:none;}
+a.coverflow:visited {color:black;text-decoration:none;} 
+a.coverflow:hover {color:black;text-decoration:underline;}
+a.coverflow:active {color:black;text-decoration:none;}
+
+.coverflow{
+    text-align:center;
+    font-size:20px;
+}
+#knoppen{
+    position:absolute;
+    
+}
 .bestel{
 	font-size: 15px;
 	text-align: center;
@@ -16,7 +53,7 @@ a.donker:active{color:black;}
 
 h1{
 	font-family: calibri;
-	color: rgb(119,156,140);
+	color: white;
 }
 
 h2{
@@ -48,39 +85,32 @@ body {
 }
 #midden{
 	margin:auto; 
-	width:60%
-}
-#headerframe {
-	position:relative;
-    	top:-9px;
-}
-
-#footerframe {
-	position:relative;
-	bottom:0px;
-	left:0px;
+	width:60%;
+	background-color:grey;
 }
 
 #logo {
+        
 	width:240;
 	height:74;
-	position:relative;
-	top: -13px;
+	position:absolute;
+	top: 0px;
 	left: 0px;
+        font-family:Impact,Times,sans-serif;
+	font-size: 90px;
+}
+#nl {
+    
+    font-size: 50px;
 }
 
 #klantblok {
-	background-image:url('afbeeldingen/welkomblokje.gif');
-	background-repeat:no-repeat;
-	background-position:right top;
-	margin-top:0px;
-	margin-bottom:0px;
-	margin-right:0px;
-	margin-left:0px;
-	width:305px;
-	height:64px;
-	position: relative;
-	top: -18px;
+	
+	width:100%;
+	
+	position: absolute;
+        top:10px;
+	right:0px;
 	text-align:right;
 	padding-right:5px;
 	padding-bottom:0px;
@@ -90,6 +120,7 @@ body {
 }
 
 #klantlinks {
+width:100%;
 text-align:right;
 color:white;
 font-family:sans-serif;
@@ -97,42 +128,63 @@ font-size: 15px;
 }
 
 #toplijst {
-background-repeat:center bottom;
-background-image:url('afbeeldingen/toplijstblok.gif');
-width:90%;
+
+width:100%;
 text-align:center;
 color:white;
-font-family:sans-serif;
-font-size: 16px;
-position:relative;
-top: -2px;
+font-family:calibri;
+font-size:28px;
+position:absolute;
+top:100px;
+left:0px;
 }
 
 #toptabel {
-background-image:url('afbeeldingen/toplijstblok.gif');
+position:absolute;
+top:0px;
+right:0px;
 width:100%;
 text-align:center;
+background-color: gray;
 }
-
+.categorieblok {
+	background-image:url('afbeeldingen/categorieblok.jpg');
+	background-repeat:no-repeat;
+	background-position:left bottom;
+}
 #helepaginadiv {
+   
+width:100%;
 position:relative;
 top: -9px;
 font-family: calibri;
 }
 
 #zoekbalk {
-text-align:center;
-position:relative;
-left:20px;
+position:absolute;
+top:70px;
+right:0px;
+text-align:right;
 }
 
-#productlijst {
+#producttabel {
 background-color:transparent;
 text-align:center;
 color:black;
+position:relative;
+    top:20px;
 }
 #reviewtabel {
     background-color:#E7E7E7;
+}
+#ordenbalk {
+   
+    text-align:right;
+    width:30%;
+    color:white;
+    background-color:#525252;
+    margin-left:70%;
+    
 }
 a.productinlijst:link{color:black;text-decoration:none;}
 a.productinlijst:visited {color:black;text-decoration:none;}
@@ -140,5 +192,24 @@ a.productinlijst:hover {color:black;text-decoration:underline;}
 a.productinlijst:active{color:black;text-decoration:none;}
 .productinlijst {
     font-family:calibri;
+    font-size:20px;
+}
+.producttitel{
+    font-family: calibri;
+    color: white;
+    font-size:50px;   
+    font-weight: lighter;
+}
+#prijsblok{
+    
+    font-family: impact;
+    color: black;
+    font-size:40px;
+    
+}
+
+.merklinks{
+    
+    color: black;
     font-size:20px;
 }

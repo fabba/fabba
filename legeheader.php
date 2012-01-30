@@ -2,10 +2,10 @@
 
 session_start();
 if(isset($_SESSION['voornaam'])){
-        $ingelogd = true ;
+    $ingelogd = true ;
 	$voornaam = $_SESSION['voornaam'];
 	$achternaam = $_SESSION['achternaam'];
-        $accountnummer = $_SESSION['accountnummer'] ;
+    $accountnummer = $_SESSION['accountnummer'] ;
 } else {
     $ingelogd = false ;
 }
@@ -19,4 +19,4 @@ if( !isset($doorschrijven) || !$doorschrijven )
 	<head>
 	<title>FABBA.nl</title> 
 	</head>
-	<body>            
+	<body>

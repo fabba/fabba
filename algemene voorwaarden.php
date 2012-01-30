@@ -1,4 +1,8 @@
-<?php include("header.php"); ?>
+<?php include("header.php"); 
+
+// Algemene voorwaarden van Fabba.nl
+// De complete tekst hieronder is gekopieerd van http://www.tennisdirect.nl/algemene-voorwaarden, met enkele kleine wijzigingen.
+?>
 
 <div id="midden">    
     <h1>Algemene Voorwaarden</h1>

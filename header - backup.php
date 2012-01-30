@@ -38,7 +38,7 @@ include("connect.php");
              
         var toptable = document.getElementById("toptabel");
         var toptr ;
-        var aantal_per_rij = 10 ;
+        var aantal_per_rij = 3 ;
         var rij = 1 + Math.floor( aantal_cells / aantal_per_rij ) ;
         if( aantal_cells % aantal_per_rij == 0  ){
             toptr = document.createElement("tr");
@@ -50,17 +50,17 @@ include("connect.php");
         }
             
         var toptd = document.createElement("td");
-        toptd.setAttribute("style", "width:" + Math.ceil( 100 / aantal_per_rij ) + "%;text-align:center;");
-        toptd.setAttribute("class", "categorieblok");          
+        toptd.setAttribute("style", "width:" + Math.ceil( 200 / aantal_per_rij ) + "%;text-align:center;");
+                    
         toptr.appendChild(toptd);
                         
         var linkje = document.createElement("a");
         linkje.setAttribute("href", "productlist.php?category=" + categorienummer );
-        linkje.setAttribute("class", "categorielink" );               
+                        
              
         toptd.appendChild(linkje);
              
-        linkje.innerHTML = linkje.innerHTML + categorienaam   ;
+        linkje.innerHTML = linkje.innerHTML + "<font size=\"" + Math.ceil( 5 / aantal_per_rij ) + "\">" + categorienaam + "<//font>"  ;
             
         aantal_cells += 1 ;
     }
@@ -68,15 +68,28 @@ include("connect.php");
 </script>	
 
         <div id="helepaginadiv">
-                
+                <table border="0"  width="100%">
+                        <tr>
+                                <td> 
 									<div id="logo" >
-                                        <a href="index.php"  class="logolink" >
-                                                FABBA<span id="nl">.nl</span>
+                                        <a href="index.php"   >
+                                                <img src="afbeeldingen/logoblokje.gif" alt="FABBA.nl"  />
                                         </a>
                                         </div>
-                                
-                                        
-                              
+                                </td>
+                                <td>
+                                        <div id="toplijst">
+                                        <table id="toptabel" border="0"> 
+                                        </table>
+                                        <form name="zoekbalk" > 
+                                                <input type="text" name="search" /> 
+                                                <input type="button" value="zoek" onclick="window.open('productlist.php?search=' + document.forms['zoekbalk']['search'].value ,'_self');" />
+                                        </form>
+									
+                                        </div>
+                                </td>
+
+                                <td> <!-- in css width="305" -->
                                 <div id = "klantblok">
                                 Welkom <?php if($ingelogd) {
                                                 echo $voornaam . " " . $achternaam ;
@@ -87,25 +100,17 @@ include("connect.php");
                                 <br />
                                 <div id="klantlinks">
                                         <?php if($ingelogd)
-                                                echo "<a href='account.php'>mijn account</a> | <a href='logout.php'>log out</a> | <a href='winkelwagentje.php'>Winkelwagentje</a>";
+                                                echo "<a href='account.php'>mijn account</a> | <a href='logout.php'>log out</a> | <a href='winkelwagentje.php'>winkelwagentje</a>" ;
                                              else
                                                 echo "<a href='login.php'>log in</a> | <a href='registreren.php'>registreren</a>" ;
-                                        ?>		
+                                        ?>
                                         
                                 </div>
-                               
-								
-                                <div id="toplijst">
-                                    
-                                        <table id="toptabel" border="0"> 
-                                        </table>
-                                    
-                                        
-									
-                                        </div>
-                </div>  
-           	
-            
+                                </div>
+                                </td>
+                        </tr>
+                </table> 
+                </div>     
 <script type="text/javascript">
 <?php
     $categoryquery = mysql_query("SELECT * FROM categories WHERE parent_category= 0");
@@ -114,21 +119,5 @@ include("connect.php");
 }
 mysql_close($con);
 ?>
+       
 </script>
-             <div  id="zoekbalk">
-                                    <form name="zoekbalk"> 
-                                                    <input type="text" name="search" size="30" /><input type="button" value="zoek" onclick="window.open('productlist.php?search=' + document.forms['zoekbalk']['search'].value ,'_self');" />
-                                            </form>
-                                    </div>
-                                </div>
-<br />
-<br />
-<br />
-<br />
-<br />
-<br />
-<br />
-<br />
-
-
-
