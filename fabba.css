@@ -35,13 +35,10 @@ a.flow:active {color:white;text-decoration:none;}
 
 a.coverflow:link {color:black;text-decoration:none;}
 a.coverflow:visited {color:black;text-decoration:none;} 
-a.coverflow:hover {color:black;text-decoration:underline;}
+a.coverflow:hover {color:black;text-decoration:none;}
 a.coverflow:active {color:black;text-decoration:none;}
 
-.coverflow{
-    text-align:center;
-    font-size:20px;
-}
+
 #knoppen{
     position:absolute;
     
@@ -73,8 +70,18 @@ body {
 	margin-right:auto;
 	font-family: calibri;
 }
-
-
+#beschrijving{
+    font-family: impact;
+    font-size: 60px;
+    text-align: center;
+    width: 1080px;
+}
+.flowknop{
+    font-size: 30px;
+    text-align: center;
+    width: 80px;
+    height: 60px;
+}
 .Error {
 	color:red;
 	text-align:left;
@@ -206,6 +213,28 @@ a.productinlijst:active{color:black;text-decoration:none;}
     color: black;
     font-size:40px;
     
+}
+#prijsblok{
+    
+    font-family: impact;
+    color: black;
+    font-size:40px;
+    
+}
+#oudeprijs{
+    
+    font-family: impact;
+    color: red;
+    font-size:30px;
+    
+}
+#cijfer{
+    font-family: calibri,Times,serif;
+    color: #003333;
+    font-style: normal;
+    text-align: center;
+    font-size: 30px;
+    font-weight: bold;
 }
 
 .merklinks{

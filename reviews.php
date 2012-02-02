@@ -43,21 +43,18 @@
         aantal_cellen += 1 ;
     }
 </script>
+<h2 style="text-align:center;">Reviews</h2> 
 <?php
 $ratecount = mysql_query("SELECT COUNT(*) FROM reviews WHERE product_number=" . $product_nummer);
 $counter = mysql_fetch_array($ratecount);
+$rateaverage = "-";
 if ($counter['COUNT(*)'] >= 1){
-$ratetotal = mysql_query("SELECT SUM(rating) FROM reviews WHERE product_number=$product_nummer");
-$rateavg = mysql_fetch_array($ratetotal);
-$rateaverage = $rateavg['SUM(rating)'] / $counter['COUNT(*)'];
-echo $rateavg['SUM(rating)'];
-echo $counter['COUNT(*)'];
-}
-else $rateaverage = "-";
+	$ratetotal = mysql_query("SELECT SUM(rating) FROM reviews WHERE product_number=$product_nummer");
+	$rateavg = mysql_fetch_array($ratetotal);
+	$rateaverage = round($rateavg['SUM(rating)'] / $counter['COUNT(*)'],1);
 ?>
-
-<h2 style="text-align:center;">Reviews</h2> 
-<div class="cijfer" > Gemiddeld cijfer: <?php echo $rateaverage; ?> </div>
+<div id="cijfer" > Cijfer: <?php echo $rateaverage; ?> </div>
+<?php } ?>
 <table id="reviewtabel" class="reviewlijst" style="width:100%" border="0">
 
 </table>

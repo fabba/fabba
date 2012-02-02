@@ -91,8 +91,6 @@ if(!empty($_GET))
 		tr.appendChild(td1);
 		
 		var td2 = document.createElement("td");
-		td2.setAttribute("style","width:20%;text-align:top;");
-		td2.innerHTML = "&#8364; "+ prijs;
 		tr.appendChild(td2);
 	
 		var td3 = document.createElement("td");
@@ -143,6 +141,12 @@ if(!empty($_GET))
 </table>
 <script type="text/javascript"> 
 	<?php
+	function toekomst($datum) {
+				$vandaagdatum = date("Y-m-d");
+				$vandaag = strtotime($vandaagdatum);
+				$anderedatum = strtotime($datum);
+				return ($vandaag <= $anderedatum);
+				}
 		    $totalamount = 0;
 			$totalprice1 = 0;
 			$totalprice2 = 0;
@@ -154,7 +158,24 @@ if(!empty($_GET))
 				/* Alle producten worden uit temp_order gehaald en in een array gezet zolang die array producten bevat blijft de functie rijen toevoegen */
 				$productquery = mysql_query("SELECT * FROM products WHERE product_number= '" . mysql_real_escape_string(htmlentities($winkel['product_number'])) . "'" );
 				$product = mysql_fetch_array($productquery);
-				$Prijst = mysql_real_escape_string(htmlentities($product['price']))* mysql_real_escape_string(htmlentities($winkel['amount']));
+				
+				$Prijsti = mysql_real_escape_string(htmlentities($product['price']));
+				$aanbieding_query = mysql_query("SELECT * FROM bargains WHERE product_number='" . mysql_real_escape_string(htmlentities($winkel['product_number'])) . "'");
+				$aanbiedingarr = mysql_fetch_array($aanbieding_query);
+				
+
+				if($aanbiedingarr) {
+				$geldigtot = $aanbiedingarr['to_date'];
+				if (toekomst($geldigtot)) {
+					$aanbieding = true;
+					$Prijsti = $aanbiedingarr['temp_price'];
+			}
+    // Als de aanbieding niet meer geldig is, moet deze uit de aanbiedingdatabase worden verwijderd.
+    else {
+        mysql_query("DELETE from bargains where product_number=$product_nummer");
+    }
+}
+				$Prijst = $Prijsti* mysql_real_escape_string(htmlentities($winkel['amount']));
 				$prijs = floor($Prijst / 100); 
 				$prijskomma =  ($Prijst % 100);
 				if( strlen($prijskomma)!= 2)
@@ -162,7 +183,7 @@ if(!empty($_GET))
 					$prijskomma = "0".$prijskomma;
 				}
 				$prijsi =  $prijs . '.' . $prijskomma;
-				$Prijsti = mysql_real_escape_string(htmlentities($product['price']));
+				
 				$prijsii = floor($Prijsti / 100); 
 				$prijskommai =  ($Prijsti % 100);
 				if( strlen($prijskommai)!= 2)

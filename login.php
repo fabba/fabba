@@ -25,14 +25,17 @@ if (!empty($_POST)) {
 		$password = mysql_query("SELECT * FROM account WHERE email ='$inlognaam' and password ='$wachtwoord' ");
 		$persoon = mysql_fetch_array($password);
 		if($persoon){
+                    
 			$_SESSION['accountnummer']= $persoon['account_number'] ;
 			$_SESSION['voornaam'] =  mysql_real_escape_string(htmlentities($persoon['first_name'])) ;
+                        $_SESSION['tussennaam'] =  mysql_real_escape_string(htmlentities($persoon['extra_name'])) ;
             $_SESSION['achternaam'] = mysql_real_escape_string(htmlentities($persoon['last_name'])) ;
             $_SESSION['liketimer']=0;
             $_SESSION['rechten'] = mysql_real_escape_string(htmlentities($persoon['acces'])) ;
 ?>
+u bent ingelogd
 <script type="text/javascript">
-    window.open("account.php",'_self','',true);
+   window.open("account.php",'_self','',true);
 </script>
 <?php
 		}

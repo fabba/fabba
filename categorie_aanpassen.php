@@ -2,26 +2,8 @@
 include("header.php");
 include("connect.php");
 
-if($ingelogd&&$rechten==2){
-	if (!empty($_POST)) {
-		mysql_query("UPDATE categories SET 
-		category_name='" . mysql_real_escape_string(htmlentities($_POST['naam'])) . "',
-		parent_category='" . mysql_real_escape_string(htmlentities($_POST['categorie'])) . "',
-		photo='" . mysql_real_escape_string(htmlentities($_POST['foto'])) . "',
-		description='" . mysql_real_escape_string(htmlentities($_POST['beschrijving'])) . 
-		"' WHERE category_number='" . $_POST['nummer'] . "'");
-?>
-        <script type="text/javascript">
-            alert("categorie aangepast");
-             function verander_foto(){
-                 var foto = document.getElementById("product_foto");
-                 var fotopad =document.forms["toevoegen"]["foto"].value ;
-                 foto.setAttribute("src", fotopad );
-             }
-         </script>             
-        
-          <?php
-	}
+if($ingelogd&&$rechten==3){
+	
 	if (!empty($_GET)) {
 		if(!empty($_GET['num'])) {
 			mysql_query("DELETE FROM categories WHERE category_number= '" . mysql_real_escape_string(htmlentities($_GET['num'])) ."'");
@@ -37,7 +19,22 @@ if($ingelogd&&$rechten==2){
 			$categorarray = mysql_fetch_array($categor) ;
 			
 		?>
-			<form name="toevoegen" method="post" action="categorie_aanpassen.php">
+		<script type="text/javascript">
+		 function verander_fot(fotot){
+                 var foto = document.getElementById("fotootje");
+				foto.setAttribute("src", fotot );
+				 var fotopad = document.getElementById("foto");
+				fotopad.value = fotot ;
+				
+             }
+             function verander_foto(){
+                 var fotol = document.getElementById("fotootje");
+				  var foto = document.getElementById("foto");
+                 var fotopad =foto.value  ;
+                 fotol.setAttribute("src",fotopad );
+             }
+			 </script>
+		
 			<table>
             <tr>
                 <th colspan="2" style="background-color:transparent">
@@ -47,10 +44,17 @@ if($ingelogd&&$rechten==2){
 			<input name="nummer" style="display:none;" value="<?php echo $_GET['categor']; ?>" />    
             <tr valign="top">
                 <td >
-                    <img id="product_foto" width="80%" height="80%" alt="geen foto gevonden" src="<?php echo $categorarray['photo']; ?>" />
+                    <?php echo'   <form action="categorie_aanpassen.php?categor='.$_GET['categor'].'&name=1" name="fot" method="post" enctype="multipart/form-data">'; ?>
+				    <img id="fotootje" src="<?php echo mysql_real_escape_string(htmlentities($categorarray['photo']));?>" width="100px" height="100px"/>
+					<label for="file">Filename:</label>
+					<input type="file" name="file" id="file" /> 
+					<br />
+					<input type="submit" name="submit" value="Submit" />
+				</form>
+				<?php echo'<form name="toevoegen" method="post" action="categorie_aanpassen.php?categor='.$_GET['categor'].'">'; ?>
 				</td>
                 <td>
-					<textarea name="foto" rows="1" cols="40"  style="resize: none;" onblur="verander_foto();"><?php echo $categorarray['photo']; ?></textarea>
+					<textarea name="foto" id="foto" rows="1" cols="40"  style="resize: none;" onchange="verander_foto();"><?php echo $categorarray['photo']; ?></textarea>
                 </td>
                </tr>
 			   <tr>
@@ -97,6 +101,35 @@ if($ingelogd&&$rechten==2){
 			</form>
 
 			<?php
+			if (!empty($_POST)) {
+	if(isset($_GET["name"])){
+		include("Fileupload.php");?>
+		<script type="text/javascript">
+
+			<?php
+			rename('/datastore/webdb1243/htdocs/Uploads/' . $_FILES["file"]["name"], '/datastore/webdb1243/htdocs/Uploads/category'.$_GET['categor']);
+			$hey = "Uploads/category".$_GET['categor'] ;
+			echo"verander_fot(\"". $hey . "\");";
+			?>
+			</script>
+			<?php
+		}
+		else{
+		mysql_query("UPDATE categories SET 
+		category_name='" . mysql_real_escape_string(htmlentities($_POST['naam'])) . "',
+		parent_category='" . mysql_real_escape_string(htmlentities($_POST['categorie'])) . "',
+		photo='" . mysql_real_escape_string(htmlentities($_POST['foto'])) . "',
+		description='" . mysql_real_escape_string(htmlentities($_POST['beschrijving'])) . 
+		"' WHERE category_number='" .$_GET['categor'] . "'");
+		
+?>
+        <script type="text/javascript">
+            alert("categorie aangepast");
+			window.open('categorie_aanpassen.php','_self');
+         </script>             
+        
+          <?php
+	}}
 	}
 	else {
 			?>

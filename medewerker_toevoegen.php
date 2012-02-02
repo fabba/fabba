@@ -1,22 +1,25 @@
 <?php 
-include("header.php"); 
+include("header.php");
 
-// Registreerformulier
-// Zodra er iets gepost is, wordt er gecontroleerd of de gebruikersnaam al bestaat.
-// Als de gebruikersnaam nog vrij is worden de gegevens toegevoegd aan de database.
+// De medewerkertoevoeg pagina
+// De beheerder kan op deze pagina een medewerker registreren. Voor zijn gegegevens gelden dezelfde eisen,
+// immers zijn bankrekeningnummer e.d. ook handig voor het uitbetalen van de loon.
+// Het enige verschil is dat de rechten niet op de default waarde (1) komen, maar deze rechten 2 krijgt.
+
+if($ingelogd&&$rechten==3){
 
 if(!empty($_POST)){
 	include("connect.php");
 	$gebruikersquery = mysql_query("SELECT * from account WHERE email = '".$_POST['Email']."'");
 	$bestaatal = mysql_fetch_array($gebruikersquery);
 	if($bestaatal){
-		echo "<p>Er is al een gebruiker geregistreerd met dit emailadres. <a href='registreren.php'>Probeer opnieuw</a>.</p>";
+		echo "<p>Er is al een gebruiker geregistreerd met dit emailadres. <a href=\"{$_SERVER['PHP_SELF']}\">Probeer opnieuw</a>.</p>";
 	}
 	else{
 		$wachtwoord = md5(mysql_real_escape_string(htmlentities($_POST['Wachtwoord']))); 
 		mysql_query("
 		INSERT INTO account (password,first_name,last_name,extra_name,company,address,zip_code,
-		city,country,phone_number,mobile_number,bank_number,creditcard_number,sex,date_birth,email)
+		city,country,phone_number,mobile_number,bank_number,creditcard_number,sex,date_birth,email, acces)
 		VALUES('$wachtwoord',
 		'".mysql_real_escape_string(htmlentities($_POST['Voornaam']))."',
 		'".mysql_real_escape_string(htmlentities($_POST['Achternaam']))."',
@@ -32,9 +35,13 @@ if(!empty($_POST)){
 		'".mysql_real_escape_string(htmlentities($_POST['Creditcardnummer']))."',
 		'".mysql_real_escape_string(htmlentities($_POST['Geslacht']))."',
 		'".$_POST['jaar']."-".$_POST['maand']."-".$_POST['dag']."',
-		'" . mysql_real_escape_string(htmlentities($_POST['Email'])) . "')");
-		echo "<p>U bent succesvol geregistreerd!<br />";
-		echo "Klik <a href='index.php' class='donker' >hier</a> om terug te gaan naar de homepagina. </p>";
+		'" . mysql_real_escape_string(htmlentities($_POST['Email'])) . "', '2')");
+?>
+<script type="text/javascript">
+	alert("Medewerker is succesvol toegevoegd");
+    window.open("medewerkers_beheren.php",'_self','',true);
+</script>
+<?php
 	}
 	mysql_close($con);
 }
@@ -44,8 +51,7 @@ if(!empty($_POST)){
 
 else{
 ?>
-
-        <script type="text/javascript">
+		<script type="text/javascript">
             function validateForm()
             {	var letterpatroon = /^[a-zA-Z]{2,50}$/;
                 var achternaam =document.forms["registreerForm"]["Achternaam"].value;
@@ -191,7 +197,10 @@ else{
                 
 				var cijferpatroon = /^[0-9]{6,12}$/;
                 var bankrekening = document.forms["registreerForm"]["Bankrekeningnummer"].value;
-                if( (bankrekening != "" && bankrekening != null) && !(cijferpatroon.test(bankrekening)&& elfproef(bankrekening))) {
+                if( bankrekening == "" || bankrekening == null ){
+                    document.getElementById("BankrekeningnummerError" ).innerHTML = "Bankrekeningnummer is niet ingevuld." ;
+                    doorgaan = false ;
+                } else if(!(cijferpatroon.test(bankrekening)&& elfproef(bankrekening))){
 		            document.getElementById("BankrekeningnummerError" ).innerHTML = "Dit bankrekeningnummer bestaat niet." ;
                     doorgaan = false ;       		
 				} else {
@@ -199,7 +208,10 @@ else{
                 }
                 var creditpatroon = /^[0-9]{13,16}$/;
                 var creditcard = document.forms["registreerForm"]["Creditcardnummer"].value;
-                if( (creditcard != "" && creditcard != null) && !(creditpatroon.test(creditcard)) ){
+                if( creditcard == "" || creditcard == null ){
+                    document.getElementById("CreditcardnummerError" ).innerHTML = "Creditcardnummer is niet ingevuld." ;
+                    doorgaan = false ;
+                } else if(!(creditpatroon.test(creditcard))){
 					document.getElementById("CreditcardnummerError" ).innerHTML = "Een creditcardnummer moet tussen de 13 en 16 cijfers hebben." ;
                     doorgaan = false ;
                 }   else {
@@ -267,15 +279,12 @@ else{
 
 
 
-        <div id="midden">
-        <form name ="registreerForm" onsubmit="return validateForm()" method="post" action="<?php echo $_SERVER['PHP_SELF']; ?>">
-            <table>
-                <tr>
-	                <th colspan="2">
-                		<h1>Registreer u nu gratis voor FABBA.nl</h1>
-                    		Velden met een * zijn verplicht.
-                	  </th>
-                </tr>
+	<div id ="midden">
+		<form name = "registreerForm" onsubmit="return validateForm()" method = "post" action="<?php echo $_SERVER['PHP_SELF']; ?>">
+			<table>
+				<tr>
+					<th colspan="3"><h1>Medewerker toevoegen</h1></th>
+				</tr>
 				<tr>
                     <td>Voornaam*:</td>
 					<td><input type="text" name="Voornaam" maxlength="50" /></td>
@@ -349,12 +358,12 @@ else{
 					<td id="EmailError" class="Error" ></td>
                 </tr>
                 <tr>
-                    <td>Bankrekeningnummer:</td>
+                    <td>Bankrekeningnummer*:</td>
 					<td><input type="text" name="Bankrekeningnummer" maxlength = "12"/></td>
 					<td id="BankrekeningnummerError" class="Error" ></td>
                 </tr>
                 <tr>
-                    <td>Creditcardnummer:</td>
+                    <td>Creditcardnummer*:</td>
 					<td> <input type="text" name="Creditcardnummer" maxlength = "16" /></td>
 					<td id="CreditcardnummerError" class="Error" ></td>
                 </tr>
@@ -370,13 +379,21 @@ else{
                 </tr>
                 <tr>
                     <td></td>
-					<td><input type="submit" value="Registreer" /></td>
+					<td><input type="submit" value="Toevoegen" /> <a href = "medewerkers_beheren.php">Terug</a></td>
 					<td></td>
                 </tr>
-
-            </table>
-        </form>
+			</table>
+		</form>
 	</div>
-    
-<?php }
-include("footer.php"); ?>
+
+<?php	
+	}
+}
+else{
+?>
+<div id = "midden">U bent niet bevoegd deze pagina te zien.</div>
+<?php
+}
+
+include("footer.php");
+?>

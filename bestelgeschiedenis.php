@@ -103,7 +103,7 @@ include("connect.php");
 	$zoek = "";
 	if (isset($_GET['search']))
 		$zoek = mysql_real_escape_string(htmlentities($_GET['search']));
-	$orderquery = mysql_query("SELECT * FROM orders  INNER JOIN products ON orders.product_number = products.product_number WHERE account_number =".$accountnummer." AND( account.first_name LIKE '%" . $zoek . "%' OR account.extra_name LIKE '%" . $zoek . "%' OR account.last_name LIKE '%" . $zoek . "%' OR orders.date_delivered LIKE '%" . $zoek . "%' OR 
+	$orderquery = mysql_query("SELECT * FROM orders  INNER JOIN products ON orders.product_number = products.product_number WHERE orders.account_number =".$accountnummer." AND(  
 		orders.delivered LIKE '%" . $zoek . "%' OR orders.req_date_delivered LIKE '%" . $zoek . "%' OR orders.date_paid LIKE '%" . $zoek . "%' OR products.product_name LIKE '%" . $zoek . "%' OR 
 		products.description LIKE '%" . $zoek . "%' OR orders.date_order LIKE '%" . $zoek . "%' OR orders.address_delivery LIKE '%" . $zoek . "%' OR orders.address_bill LIKE '%" . $zoek . "%' OR 
 	    orders.account_number LIKE '%" . $zoek . "%') ");

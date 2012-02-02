@@ -1,24 +1,20 @@
 <?php
 include("header.php");
 include("connect.php");
-if($rechten>1)
-{
-	if(!empty($_GET))
-	{ 
+if($ingelogd&&$rechten>1){
+	if(!empty($_GET)){ 
 		/* Als er bestelling zijn veranderd dan update de website het op dezelfde pagina */
-		if(!empty($_GET['betaalt']))
-		{
-		$orderquery = mysql_query("UPDATE  orders SET  paid =  'yes',date_paid = NOW( ) WHERE order_number =".$_GET['ordernummer'] . " AND product_number = ".mysql_real_escape_string(htmlentities($_GET['productnaam'])));
+		if(!empty($_GET['betaald'])) {
+			$orderquery = mysql_query("UPDATE  orders SET  paid =  'yes',date_paid = NOW( ) WHERE order_number =".$_GET['ordernummer'] . " AND product_number = ".mysql_real_escape_string(htmlentities($_GET['productnaam'])));
 		}
-		if(!empty($_GET['geleverd']))
-		{
-		$orderquery = mysql_query("UPDATE  orders SET  delivered =  'yes',date_delivered = NOW( ) WHERE order_number =".$_GET['ordernummer'] . " AND product_number = ".mysql_real_escape_string(htmlentities($_GET['productnaam'])));
+		if(!empty($_GET['geleverd'])){
+			$orderquery = mysql_query("UPDATE  orders SET  delivered =  'yes',date_delivered = NOW( ) WHERE order_number =".$_GET['ordernummer'] . " AND product_number = ".mysql_real_escape_string(htmlentities($_GET['productnaam'])));
 		}
 	}
 ?>
 <script type="text/javascript"> 
 	var positie = 0;
-    function voeg_cel_toe( ordernummer,accountnummer,voornaam, tussenvoegsel, achternaam,aantal ,date_order,productnaam, prijs, betaalt , betaaldatum , geleverd , leverdatum, productnummer)
+    function voeg_cel_toe( ordernummer,accountnummer,voornaam, tussenvoegsel, achternaam,aantal ,date_order,gewenst,productnaam, prijs, betaald , betaaldatum , geleverd , leverdatum, productnummer)
 	{ 
 		<!-- Voor elk product wordt een aparte rij toegevoegd -->
 		var winkel = document.getElementById("Winkel");	
@@ -53,6 +49,10 @@ if($rechten>1)
 		td4.innerHTML = date_order;
 		tr.appendChild(td4);
 		
+		var td12 = document.createElement("td");
+		td12.innerHTML = gewenst;
+		tr.appendChild(td12);
+		
 		var td5 = document.createElement("td");
 		td5.innerHTML = productnaam;
 		tr.appendChild(td5);
@@ -61,13 +61,13 @@ if($rechten>1)
 		td6.innerHTML = "&#8364 " + prijs;
 		tr.appendChild(td6);
 		
-		if ( betaalt == 'no')
+		if ( betaald == 'no')
 		{
 			var td10 = document.createElement("td");
 			var td7 = document.createElement("input");
 			td7.setAttribute("type","button");
-			td7.setAttribute("onClick","window.open('bestellingenbeheren.php?ordernummer=" + ordernummer + "&productnaam=" + productnummer +"&betaalt=1#pos"+posnew+  "','_self')");
-			td7.setAttribute("value","Betaalt");
+			td7.setAttribute("onClick","window.open('bestellingenbeheren.php?ordernummer=" + ordernummer + "&productnaam=" + productnummer +"&betaald=1#pos"+posnew+  "','_self')");
+			td7.setAttribute("value","Betaald");
 			tr.appendChild(td10);
 			td10.appendChild(td7);
 			
@@ -117,6 +117,7 @@ if($rechten>1)
 		<td >Naam</td>
 		<td >Aantal</td>
 		<td >Besteldatum</td>
+		<td >gewenste leveringsdatum</td>
 		<td >Productnaam</td>
 		<td >PrijsTotaal</td>
 		<td >Betaald</td>
@@ -144,10 +145,10 @@ if($rechten>1)
 				$prijskomma = "0".$prijskomma;
 			}
 			$prijsi =  $prijs . '.' . $prijskomma;
-			echo "voeg_cel_toe( \"" . mysql_real_escape_string(htmlentities($order['order_number'])) . "\", \"" . mysql_real_escape_string(htmlentities($order['account_number'])) . "\", \"" . mysql_real_escape_string(htmlentities($order['first_name'])) . "\", \"" . mysql_real_escape_string(htmlentities($order['extra_name'])) . "\", \"" . mysql_real_escape_string(htmlentities($order['last_name'])) . "\", \"" . mysql_real_escape_string(htmlentities($order['amount'])) . "\", \"" . mysql_real_escape_string(htmlentities($order['date_order'])) . "\", \"" . mysql_real_escape_string(htmlentities($order['product_name'])) . "\", \"" . $prijsi . "\", \"" . mysql_real_escape_string(htmlentities($order['paid'])) . "\" , \"" . mysql_real_escape_string(htmlentities($order['date_paid'])) . "\",  \"" . mysql_real_escape_string(htmlentities($order['delivered'])) . "\", \"" . mysql_real_escape_string(htmlentities($order['date_delivered'])) . "\", \"" . mysql_real_escape_string(htmlentities($order['product_number'])) . "\" );";
+			echo "voeg_cel_toe( \"" . mysql_real_escape_string(htmlentities($order['order_number'])) . "\", \"" . mysql_real_escape_string(htmlentities($order['account_number'])) . "\", \"" . mysql_real_escape_string(htmlentities($order['first_name'])) . "\", \"" . mysql_real_escape_string(htmlentities($order['extra_name'])) . "\", \"" . mysql_real_escape_string(htmlentities($order['last_name'])) . "\", \"" . mysql_real_escape_string(htmlentities($order['amount'])) . "\", \"" . mysql_real_escape_string(htmlentities($order['date_order'])) . "\",\"" . mysql_real_escape_string(htmlentities($order['req_date_delivered'])) . "\", \"" . mysql_real_escape_string(htmlentities($order['product_name'])) . "\", \"" . $prijsi . "\", \"" . mysql_real_escape_string(htmlentities($order['paid'])) . "\" , \"" . mysql_real_escape_string(htmlentities($order['date_paid'])) . "\",  \"" . mysql_real_escape_string(htmlentities($order['delivered'])) . "\", \"" . mysql_real_escape_string(htmlentities($order['date_delivered'])) . "\", \"" . mysql_real_escape_string(htmlentities($order['product_number'])) . "\" );";
             
 		}
-	}// Haak sluiten van if($rechten>1) 
+	} // Haak sluiten van if($rechten>1) 
     ?>
 </script>        
 <?php include("footer.php"); ?>

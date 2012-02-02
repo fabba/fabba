@@ -2,53 +2,10 @@
 include("header.php");
 include("connect.php");
 
-// De product aanpaspagina
-// Op deze pagina kan de beheerder gemakkelijk een product aanpassen. 
-// Om de pagina te zien, dient de aanvrager van de pagina beheerdersrechten te hebben en een productnummer mee te geven.
-// Als er iets gepost is, wordt dit ingevuld in de database. Het formulier is altijd zichtbaar.
-
-if(isset($_GET["product_number"])){
+		if(isset($_GET["product_number"])){
 	$product_nummer = $_GET["product_number"];
 	$gelukt = false ;
-	if($ingelogd&&$rechten>1){ 
-		if(!empty($_POST)){ 
-			$bar_query = mysql_query("SELECT * FROM bargains WHERE product_number=$product_nummer");
-			$bar = mysql_fetch_array($bar_query);
-			if(!empty($bar)){
-				mysql_query("DELETE FROM bargains where product_number = '".mysql_real_escape_string(htmlentities($product_nummer))."'");
-			}
-			if (!empty($_POST['aanbieding_komma'])||!empty($_POST['aanbieding_prijs'])){
-				$nieuweaanbiedingsprijs = $_POST['aanbieding_prijs'] * 100 + $_POST['aanbieding_komma'];
-				mysql_query("INSERT INTO bargains (product_number, temp_price, from_date, to_date) 
-				VALUES(' " . mysql_real_escape_string(htmlentities($product_nummer)) . "','" .
-				mysql_real_escape_string(htmlentities($nieuweaanbiedingsprijs)) . "','" . 
-				date("Y-m-d") . "','" . 
-				mysql_real_escape_string(htmlentities($_POST['to_date'])). "')");
-			}
-            
-			$nieuweprijs = $_POST['product_prijs'] * 100 + $_POST['prijskomma'] ;
-            $gelukt = mysql_query("UPDATE  products SET  
-			product_name ='" . mysql_real_escape_string(htmlentities($_POST['product_naam'])) . "' , 
-			price ='" . mysql_real_escape_string(htmlentities($nieuweprijs)) . "', 
-			stock ='" . mysql_real_escape_string(htmlentities($_POST['product_voorraad'])) . "', 
-			product_photo ='" . mysql_real_escape_string(htmlentities($_POST['product_foto'])) . "', 
-			description = '" . mysql_real_escape_string(htmlentities($_POST['product_beschrijving'])) . "', 
-			brand_number = '" . mysql_real_escape_string(htmlentities($_POST['product_merk'])) . "',
-			category = '" . mysql_real_escape_string(htmlentities($_POST['product_categorie'])) . "',
-			likes = '" . mysql_real_escape_string(htmlentities($_POST['product_likes'])) . "',
-			dislikes = '" . mysql_real_escape_string(htmlentities($_POST['product_dislikes'])) . "'
-			WHERE  product_number =" . $product_nummer ) ;
-		} 
-               
-        $bargains_query = mysql_query("SELECT * FROM bargains WHERE product_number=$product_nummer");
-		$bargains = mysql_fetch_array($bargains_query);
-		$totalebargainprijs = $bargains['temp_price'];
-		$bargainprijs = floor($totalebargainprijs/100);
-		$bargainkomma = $totalebargainprijs % 100;
-		if(strlen($bargainkomma)<2){
-			$bargainkomma = "0".$bargainkomma;
-		}
-        $product_query = mysql_query("SELECT * FROM products WHERE product_number=$product_nummer");
+	 $product_query = mysql_query("SELECT * FROM products WHERE product_number=$product_nummer");
         $product = mysql_fetch_array($product_query);
 		$Prijst = mysql_real_escape_string(htmlentities($product['price']));
 		
@@ -57,9 +14,41 @@ if(isset($_GET["product_number"])){
 		if( strlen($prijskomma)<2){
 			$prijskomma = "0".$prijskomma;
 		}
+		$bar_query = mysql_query("SELECT * FROM bargains WHERE product_number=$product_nummer");
+			$bar = mysql_fetch_array($bar_query);
+			  $bargains_query = mysql_query("SELECT * FROM bargains WHERE product_number=$product_nummer");
+		$bargains = mysql_fetch_array($bargains_query);
+		$totalebargainprijs = $bargains['temp_price'];
+		$bargainprijs = floor($totalebargainprijs/100);
+		$bargainkomma = $totalebargainprijs % 100;
+		if(strlen($bargainkomma)<2){
+			$bargainkomma = "0".$bargainkomma;
+		}
+       
+// De product aanpaspagina
+// Op deze pagina kan de beheerder gemakkelijk een product aanpassen. 
+// Om de pagina te zien, dient de aanvrager van de pagina beheerdersrechten te hebben en een productnummer mee te geven.
+// Als er iets gepost is, wordt dit ingevuld in de database. Het formulier is altijd zichtbaar.
+?>
+ <script type="text/javascript">
+		 function verander_fot(fotot){
+                 var foto = document.getElementById("fotootje");
+				foto.setAttribute("src", fotot );
+				 var foto = document.getElementById("foto");
+				foto.value = fotot ;
+				
+             }
+             function verander_foto(){
+                 var foto = document.getElementById("fotootje");
+				  var fotot = document.getElementById("foto");
+                 var fotopad =fotot.value  ;
+                 foto.setAttribute("src", fotopad );
+             }
+         </script>            
+
 		
-        ?>
-        <form method="post" action="product_aanpassen.php?product_number=<?php echo $product_nummer ?>">
+       
+        
         <table width="100%" border="0">
           
             <tr>
@@ -75,8 +64,19 @@ if(isset($_GET["product_number"])){
 
             <tr valign="top">
                 <td style="background-color:transparent;width:30%;height:60%;text-align:right;">
-                    <img src="<?php echo $product['product_photo'] ?>" width="60%" height="60%" / >
-                    <textarea name="product_foto" style="resize: none;" rows="1" cols="40"><?php echo $product['product_photo']; ?></textarea>
+                <?php echo'   <form action="product_aanpassen.php?product_number='.$product_nummer.'&name=1" name="fot" method="post" enctype="multipart/form-data">'; ?>
+				    <img id="fotootje" src="<?php echo mysql_real_escape_string(htmlentities($product['product_photo']));?>" width="100px" height="100px"/>
+					<label for="file">Filename:</label>
+					<input type="file" name="file" id="file" /> 
+					<br />
+					<input type="submit" name="submit" value="Submit" />
+				</form>
+					<form method="post" action="product_aanpassen.php?product_number=<?php echo $product_nummer ?>">
+                    <textarea id="foto" name="productfoto" style="resize: none;" rows="1" cols="40" onchange="verander_foto()"><?php echo mysql_real_escape_string(htmlentities($product['product_photo']));?></textarea>
+					
+					
+					
+					
                 </td>
                 <td style="height:300px;width:40%;text-align:top;">
 
@@ -94,8 +94,7 @@ if(isset($_GET["product_number"])){
 					 <b>Merk</b>:<select name="product_merk" /> 
 					<?php
 					$brand = mysql_query("SELECT * FROM brands");
-					while ( $brandarray = mysql_fetch_array($brand) )
-					{ 
+					while ( $brandarray = mysql_fetch_array($brand) ) { 
 					?>
 						<option value="<?php echo mysql_real_escape_string(htmlentities($brandarray['brand_number'])); ?>" <?php if( $brandarray['brand_number'] == $product['brand_number']){echo 'selected="selected"' ;}?> > <?php echo mysql_real_escape_string(htmlentities($brandarray['brand_name'])); ?></option><br />
 					<?php ;
@@ -130,8 +129,59 @@ if(isset($_GET["product_number"])){
 
         </table>
         </form>
-<?php   
-    }
+		<?php
+	if($ingelogd&&$rechten==3){ 
+		if(!empty($_POST)){ 
+		if(isset($_GET["name"])){
+		include("Fileupload.php");?>
+		<script type="text/javascript">
+
+			<?php
+			rename('/datastore/webdb1243/htdocs/Uploads/' . $_FILES["file"]["name"], '/datastore/webdb1243/htdocs/Uploads/product'.$product_nummer);
+			$hey = "Uploads/product".$product_nummer ;
+			echo"verander_fot(\"". $hey . "\");";
+			?>
+			</script>
+			<?php
+		}
+		else{
+			
+			if(!empty($bar)){
+				mysql_query("DELETE FROM bargains where product_number = '".mysql_real_escape_string(htmlentities($product_nummer))."'");
+			}
+			if (!empty($_POST['aanbieding_komma'])||!empty($_POST['aanbieding_prijs'])){
+				$nieuweaanbiedingsprijs = $_POST['aanbieding_prijs'] * 100 + $_POST['aanbieding_komma'];
+				mysql_query("INSERT INTO bargains (product_number, temp_price, from_date, to_date) 
+				VALUES(' " . mysql_real_escape_string(htmlentities($product_nummer)) . "','" .
+				mysql_real_escape_string(htmlentities($nieuweaanbiedingsprijs)) . "','" . 
+				date("Y-m-d") . "','" . 
+				mysql_real_escape_string(htmlentities($_POST['to_date'])). "')");
+			}
+            
+			$nieuweprijs = $_POST['product_prijs'] * 100 + $_POST['prijskomma'] ;
+            $gelukt = mysql_query("UPDATE  products SET  
+			product_name ='" . mysql_real_escape_string(htmlentities($_POST['product_naam'])) . "' , 
+			price ='" . mysql_real_escape_string(htmlentities($nieuweprijs)) . "', 
+			stock ='" . mysql_real_escape_string(htmlentities($_POST['product_voorraad'])) . "', 
+			product_photo ='". mysql_real_escape_string(htmlentities($_POST['productfoto'])) ."', 
+			description = '" . mysql_real_escape_string(htmlentities($_POST['product_beschrijving'])) . "', 
+			brand_number = '" . mysql_real_escape_string(htmlentities($_POST['product_merk'])) . "',
+			category = '" . mysql_real_escape_string(htmlentities($_POST['product_categorie'])) . "',
+			likes = '" . mysql_real_escape_string(htmlentities($_POST['product_likes'])) . "',
+			dislikes = '" . mysql_real_escape_string(htmlentities($_POST['product_dislikes'])) . "'
+			WHERE  product_number =" . $product_nummer ) ;
+			echo'
+			 <script type="text/javascript">
+            alert("Product aangepast");
+			window.open("productpagina.php?product_number='.$product_nummer.'","_self");
+         </script>             
+      ';
+		} 
+               
+      
+		
+
+    }}
 	else{
 		echo "U bent niet bevoegd deze pagina te zien. ";
 	}

@@ -2,11 +2,12 @@
 
 session_start();
 if(isset($_SESSION['accountnummer'])){
-        $ingelogd = true ;
+    $ingelogd = true ;
 	$voornaam = $_SESSION['voornaam'];
+    $tussennaam = $_SESSION['tussennaam'];
 	$achternaam = $_SESSION['achternaam'];
-        $accountnummer = $_SESSION['accountnummer'] ;
-        $rechten = $_SESSION['rechten'] ;
+    $accountnummer = $_SESSION['accountnummer'] ;
+    $rechten = $_SESSION['rechten'] ;
 } else {
     $ingelogd = false ;
 }
@@ -20,7 +21,7 @@ if( !isset($doorschrijven) || !$doorschrijven )
 	<head>
 	
 		<title>FABBA.nl</title>
-        <link rel="shortcut icon" type="image/x-icon" href="/afbeeldingen/favicon.ico" />
+        <link rel="shortcut icon" type="image/x-icon" href="afbeeldingen/favicon.ico" />
 		<link rel="stylesheet" type="text/css" href="fabba.css" />
 		
 
@@ -71,7 +72,7 @@ include("connect.php");
                 
 									<div id="logo" >
                                         <a href="index.php"  class="logolink" >
-                                                FABBA<span id="nl">.nl</span>
+                                                FABBA<span id="nl">.nl<noscript style="font-size:40px;color:red;"> werkt niet zonder javascript.</noscript></span>
                                         </a>
                                         </div>
                                 
@@ -79,17 +80,22 @@ include("connect.php");
                               
                                 <div id = "klantblok">
                                 Welkom <?php if($ingelogd) {
-                                                echo $voornaam . " " . $achternaam ;
+                                                echo $voornaam . " " . $tussennaam . " " . $achternaam ;
                                             } else {
                                                 echo "op FABBA.nl" ;
                                             }
                                         ?> 
                                 <br />
                                 <div id="klantlinks">
-                                        <?php if($ingelogd)
-                                                echo "<a href='account.php'>mijn account</a> | <a href='logout.php'>log out</a> | <a href='winkelwagentje.php'>Winkelwagentje</a>";
-                                             else
-                                                echo "<a href='login.php'>log in</a> | <a href='registreren.php'>registreren</a>" ;
+                                        <?php 
+										// Iedereen die inlogt is, kan zijn account bekijken en uitloggen.
+										// Consument gebruikers (rechten 1) kunnen daarnaast hun winkelwagentje bekijken.
+										if($ingelogd)
+                                            echo "<a href='account.php'>mijn account</a> | <a href='logout.php'>log out</a>";
+                                        else if($ingelogd&&$rechten==1)
+                                            echo " | <a href='winkelwagentje.php'>Winkelwagentje</a>";											
+										else
+                                            echo "<a href='login.php'>log in</a> | <a href='registreren.php'>registreren</a>" ;
                                         ?>		
                                         
                                 </div>
@@ -115,12 +121,12 @@ include("connect.php");
 mysql_close($con);
 ?>
 </script>
-             <div  id="zoekbalk">
-                                    <form name="zoekbalk"> 
-                                                    <input type="text" name="search" size="30" /><input type="button" value="zoek" onclick="window.open('productlist.php?search=' + document.forms['zoekbalk']['search'].value ,'_self');" />
-                                            </form>
-                                    </div>
-                                </div>
+	<div  id="zoekbalk">
+		<form name="zoekbalk"> 
+			<input type="text" name="search" size="30" /><input type="button" value="zoek" onclick="window.open('productlist.php?search=' + document.forms['zoekbalk']['search'].value ,'_self');" />
+		</form>
+	</div>
+</div>
 <br />
 <br />
 <br />

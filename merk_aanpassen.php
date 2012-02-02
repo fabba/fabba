@@ -1,7 +1,7 @@
 <?php
 include("header.php");
 
-if($rechten==2){
+if($ingelogd&&$rechten==3){
         include("connect.php");
 	if (!empty($_POST)) {
 		

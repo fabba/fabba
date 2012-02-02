@@ -1,7 +1,7 @@
 <?php
 include("header.php");
 
-if($rechten==2){
+if($ingelogd&&$rechten==3){
 	if (!empty($_POST)) {
 		include("connect.php");
 		if (mysql_query("INSERT INTO brands (brand_name)

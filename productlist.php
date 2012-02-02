@@ -7,7 +7,7 @@ include("connect.php");
 <script type="text/javascript">
            
     var aantal_cellen = 0 ; 
-    function voeg_cel_toe( productnummer, fotopad, naam, prijs ){
+    function voeg_cel_toe( productnummer, fotopad, naam, prijs, aanbiedingsprijs ){
              
         var table = document.getElementById("producttabel");
         var tr ;
@@ -41,8 +41,11 @@ include("connect.php");
         td.appendChild(link);
              
         link.appendChild(plaat);
-        link.innerHTML = link.innerHTML + "<br //> " + naam + " <br //> &#8364 " + prijs ;
-            
+        if( aanbiedingsprijs == "-1"){ 
+            link.innerHTML = link.innerHTML + "<br //> " + naam + " <br //> &#8364 " + prijs ;
+        } else {
+            link.innerHTML = link.innerHTML + "<br //> " + naam + " <br //><strike style='color:red;'>&#8364 " + prijs + "</strike> &#8364 " + aanbiedingsprijs ;
+         }   
         aantal_cellen += 1 ;
     }
         
@@ -59,7 +62,7 @@ if (!empty($_GET['page']) && is_numeric($_GET['page']))
 $categorie = "";
 if (isset($_GET['category']) && is_numeric($_GET['category'])) {
     $categorie = $_GET['category'];
-    if( $pagenumber == 0 ){
+    if ($pagenumber == 0) {
         $catquery = mysql_query("SELECT * FROM categories WHERE category_number= " . $categorie);
         $cat = mysql_fetch_array($catquery);
         ?>
@@ -70,13 +73,12 @@ if (isset($_GET['category']) && is_numeric($_GET['category'])) {
                     <img src="<?php echo mysql_real_escape_string(htmlentities($cat['photo'])) ?>" height="100%" />
                 </td>
                 <td style="height:130px;width:70%;text-align:left;">
-                    <h1><?php echo mysql_real_escape_string(htmlentities($cat['category_name'])) ;?></h1>
-                    <h3><?php echo mysql_real_escape_string(htmlentities($cat['description'])) ;?></h3>
+                    <h1><?php echo mysql_real_escape_string(htmlentities($cat['category_name'])); ?></h1>
+                    <h3><?php echo mysql_real_escape_string(htmlentities($cat['description'])); ?></h3>
                 </td>
             </tr>
         </table>
         <?php
-
         $subaantal = mysql_query("SELECT COUNT(*) FROM categories WHERE parent_category=" . $categorie);
         $aantal = mysql_fetch_array($subaantal);
         if ($aantal['COUNT(*)'] >= 1) {
@@ -122,51 +124,103 @@ if ($categorie != "") {
     $categorieselect = " AND category = $categorie";
 }
 
-    $volgendequery = mysql_query("SELECT COUNT(product_number) FROM (products INNER JOIN categories ON products.category=categories.category_number) INNER JOIN brands ON products.brand_number=brands.brand_number WHERE ( products.product_name LIKE '%" . $zoek . "%' OR products.description LIKE '%" . $zoek . "%' OR categories.category_name LIKE '%" . $zoek . "%' OR brands.brand_name LIKE '%" . $zoek . "%') " . $categorieselect );
-    $v_aantal = mysql_fetch_array($volgendequery);
-    if($v_aantal['COUNT(product_number)'] > 0){
-?>
-<div id="ordenbalk">
-    <b>Ordenen op</b>
-        <a href="productlist.php?page=0&search=<?php echo $zoek ?>&sort=n&category=<?php echo $categorie ?><?php if( $sorteerop == "product_name"){?>&vol=<?php if($volgorde == "ASC"){?>D<?php } else{?>A<?php }} ?>" class="ordenlink" >
-            Naam</a><?php if( $sorteerop == "product_name"){if($volgorde == "DESC"){?>&uarr;<?php } else{?>&darr;<?php }} ?> |
-        <a href="productlist.php?page=0&search=<?php echo $zoek ?>&sort=p&category=<?php echo $categorie ?><?php if( $sorteerop == "price"){?>&vol=<?php if($volgorde == "ASC"){?>D<?php } else{?>A<?php }} ?>" class="ordenlink" >
-            Prijs</a><?php if( $sorteerop == "price"){if($volgorde == "DESC"){?>&uarr;<?php } else{?>&darr;<?php }} ?> |
-        <a href="productlist.php?page=0&search=<?php echo $zoek ?>&sort=l&category=<?php echo $categorie ?><?php if( $sorteerop == "likes"){?>&vol=<?php if($volgorde == "ASC"){?>D<?php } else{?>A<?php }} ?>" class="ordenlink" >
-            Likes</a><?php if( $sorteerop == "likes"){if($volgorde == "DESC"){?>&uarr;<?php } else{?>&darr;<?php }} ?> |
-        <a href="productlist.php?page=0&search=<?php echo $zoek ?>&sort=s&category=<?php echo $categorie ?><?php if( $sorteerop == "sold"){?>&vol=<?php if($volgorde == "ASC"){?>D<?php } else{?>A<?php }} ?>" class="ordenlink" >
-            Bestverkocht</a><?php if( $sorteerop == "sold"){if($volgorde == "DESC"){?>&uarr;<?php } else{?>&darr;<?php }} ?></div>
-<hr />
+$volgendequery = mysql_query("SELECT COUNT(product_number) FROM (products INNER JOIN categories ON products.category=categories.category_number) INNER JOIN brands ON products.brand_number=brands.brand_number WHERE ( products.product_name LIKE '%" . $zoek . "%' OR products.description LIKE '%" . $zoek . "%' OR categories.category_name LIKE '%" . $zoek . "%' OR brands.brand_name LIKE '%" . $zoek . "%') " . $categorieselect);
+$v_aantal = mysql_fetch_array($volgendequery);
+if ($v_aantal['COUNT(product_number)'] > 0) {
+    ?>
+    <div id="ordenbalk">
+        <b>Ordenen op</b>
+        <a href="productlist.php?page=0&search=<?php echo $zoek ?>&sort=n&category=<?php echo $categorie ?><?php if ($sorteerop == "product_name") { ?>&vol=<?php if ($volgorde == "ASC") { ?>D<?php } else { ?>A<?php }
+    }
+    ?>" class="ordenlink" >
+            Naam</a><?php if ($sorteerop == "product_name") {
+           if ($volgorde == "DESC") {
+            ?>&uarr;<?php } else { ?>&darr;<?php }
+    }
+    ?> |
+        <a href="productlist.php?page=0&search=<?php echo $zoek ?>&sort=p&category=<?php echo $categorie ?><?php if ($sorteerop == "price") { ?>&vol=<?php if ($volgorde == "ASC") { ?>D<?php } else { ?>A<?php }
+    }
+    ?>" class="ordenlink" >
+            Prijs</a><?php if ($sorteerop == "price") {
+        if ($volgorde == "DESC") {
+            ?>&uarr;<?php } else { ?>&darr;<?php }
+    }
+    ?> |
+        <a href="productlist.php?page=0&search=<?php echo $zoek ?>&sort=l&category=<?php echo $categorie ?><?php if ($sorteerop == "likes") { ?>&vol=<?php if ($volgorde == "ASC") { ?>D<?php } else { ?>A<?php }
+    }
+    ?>" class="ordenlink" >
+            Likes</a><?php if ($sorteerop == "likes") {
+        if ($volgorde == "DESC") {
+            ?>&uarr;<?php } else { ?>&darr;<?php }
+    }
+    ?> |
+        <a href="productlist.php?page=0&search=<?php echo $zoek ?>&sort=s&category=<?php echo $categorie ?><?php if ($sorteerop == "sold") { ?>&vol=<?php if ($volgorde == "ASC") { ?>D<?php } else { ?>A<?php }
+    }
+    ?>" class="ordenlink" >
+            Bestverkocht</a><?php if ($sorteerop == "sold") {
+        if ($volgorde == "DESC") {
+            ?>&uarr;<?php } else { ?>&darr;<?php }
+    }
+    ?></div>
+    <hr />
 
-        <table id="producttabel" class="productlijst" width="100%" border="0">
-        </table> <br />
+    <table id="producttabel" class="productlijst" width="100%" border="0">
+    </table> <br />
     <?php
-
     $productquery = mysql_query("SELECT * FROM (products INNER JOIN categories ON products.category=categories.category_number) INNER JOIN brands ON products.brand_number=brands.brand_number WHERE ( products.product_name LIKE '%" . $zoek . "%' OR products.description LIKE '%" . $zoek . "%' OR categories.category_name LIKE '%" . $zoek . "%' OR brands.brand_name LIKE '%" . $zoek . "%' ) " . $categorieselect . " ORDER BY products." . $sorteerop . " " . $volgorde . "  LIMIT " . $min . " ," . $max);
 
     if ($pagenumber >= 1) {
         ?>
-        <div id="vorige"><a href="productlist.php?page=0&search=<?php echo $zoek ?>&sort=<?php echo $sort ?>&vol=<?php echo $vol ; ?>&category=<?php echo $categorie ?>" class="donker" >Eerste</a>   <a href="productlist.php?page=<?php echo $pagenumber - 1 ?>&search=<?php echo $zoek ?>&sort=<?php echo $sort ?>&vol=<?php echo $vol ; ?>&category=<?php echo $categorie ?>" class="donker" >Vorige</a> </div>
-    <?php
+        <div id="vorige"><a href="productlist.php?page=0&search=<?php echo $zoek ?>&sort=<?php echo $sort ?>&vol=<?php echo $vol; ?>&category=<?php echo $categorie ?>" class="donker" >Eerste</a>   <a href="productlist.php?page=<?php echo $pagenumber - 1 ?>&search=<?php echo $zoek ?>&sort=<?php echo $sort ?>&vol=<?php echo $vol; ?>&category=<?php echo $categorie ?>" class="donker" >Vorige</a> </div>
+        <?php
     }
 
     if (ceil($v_aantal['COUNT(product_number)'] / 24) - 1 > $pagenumber) {
         ?>
-        <div id="volgende" style="width:150px;float:right;"><a href="productlist.php?page=<?php echo $pagenumber + 1 ?>&search=<?php echo $zoek ?>&sort=<?php echo $sort ?>&vol=<?php echo $vol ; ?>&category=<?php echo $categorie ?>" class="donker" >Volgende</a> <a href="productlist.php?page=<?php echo ceil($v_aantal['COUNT(product_number)'] / 24) - 1 ?>&search=<?php echo $zoek ?>&sort=<?php echo $sort ?>&vol=<?php echo $vol ; ?>&category=<?php echo $categorie ?>" class="donker" >Laatste</a></div> <br />
+        <div id="volgende" style="width:150px;float:right;"><a href="productlist.php?page=<?php echo $pagenumber + 1 ?>&search=<?php echo $zoek ?>&sort=<?php echo $sort ?>&vol=<?php echo $vol; ?>&category=<?php echo $categorie ?>" class="donker" >Volgende</a> <a href="productlist.php?page=<?php echo ceil($v_aantal['COUNT(product_number)'] / 24) - 1 ?>&search=<?php echo $zoek ?>&sort=<?php echo $sort ?>&vol=<?php echo $vol; ?>&category=<?php echo $categorie ?>" class="donker" >Laatste</a></div> <br />
     <?php } ?>
     <script type="text/javascript">
     <?php
+    function toekomst($datum) {
+            $vandaagdatum = date("Y-m-d");
+            $vandaag = strtotime($vandaagdatum);
+            $anderedatum = strtotime($datum);
+            return ($vandaag <= $anderedatum);
+    }
 
     while ($product = mysql_fetch_array($productquery)) {
-    $Prijst = mysql_real_escape_string(htmlentities($product['price']));
-    $prijs = floor($Prijst / 100); 
-    $prijskomma =  ($Prijst % 100);
-            if( strlen($prijskomma)!= 2)
-            {
-                    $prijskomma = "0".$prijskomma;
+        $Prijst = mysql_real_escape_string(htmlentities($product['price']));
+        $prijs = floor($Prijst / 100);
+        $prijskomma = ($Prijst % 100);
+        if (strlen($prijskomma) != 2) {
+            $prijskomma = "0" . $prijskomma;
+        }
+        $aanbieding_query = mysql_query("SELECT * FROM bargains WHERE product_number=" . $product['product_number']);
+        $aanbiedingarr = mysql_fetch_array($aanbieding_query);
+        $aanbieding = false;
+
+        
+        if ($aanbiedingarr) {
+            $geldigtot = $aanbiedingarr['to_date'];
+            if (toekomst($geldigtot)) {
+                $aanbieding = true;
+                $aanbiedingsprijs = $aanbiedingarr['temp_price'];
             }
-        echo "voeg_cel_toe( \"" . mysql_real_escape_string(htmlentities($product['product_number'])) . "\", \"" . mysql_real_escape_string(htmlentities($product['product_photo'])) . "\", \"" . mysql_real_escape_string(htmlentities($product['product_name'])) . "\", \"" . $prijs . '.' . $prijskomma . "\" );";
-   }
+// Als de aanbieding niet meer geldig is, moet deze uit de aanbiedingdatabase worden verwijderd.
+            else {
+                mysql_query("DELETE from bargains WHERE product_number=" . $product['product_number']);
+            }
+        }
+        if ($aanbieding) {
+            $nul = "";
+            if (strlen($aanbiedingsprijs % 100) < 2) {
+                $nul = "0" . $nul;
+            }
+            echo "voeg_cel_toe( \"" . mysql_real_escape_string(htmlentities($product['product_number'])) . "\", \"" . mysql_real_escape_string(htmlentities($product['product_photo'])) . "\", \"" . mysql_real_escape_string(htmlentities($product['product_name'])) . "\", \"" . $prijs . '.' . $prijskomma . "\", \"" . floor($aanbiedingsprijs / 100) . "," . $nul . ($aanbiedingsprijs % 100) . "\"  );";
+        } else {
+            echo "voeg_cel_toe( \"" . mysql_real_escape_string(htmlentities($product['product_number'])) . "\", \"" . mysql_real_escape_string(htmlentities($product['product_photo'])) . "\", \"" . mysql_real_escape_string(htmlentities($product['product_name'])) . "\", \"" . $prijs . '.' . $prijskomma . "\", \"-1\"  );";
+        }
+    }
 }
 ?>
        

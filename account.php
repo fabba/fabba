@@ -1,9 +1,15 @@
-<?php
+ <?php
 // Account pagina
+//
+// Deze pagina is per gebruiker verschillend:
+// Consumenten hebben $rechten 1, deze kunnen hun eigen gegevens aanpassen en hun  eigen bestellingen zien.
+// Medewerkers hebben $rechten 2, deze kunnen alle bestellingen zien en beheren en reviews verwijderen.
+// De beheerder heeft $rechten 3, deze kan ook medewerkers toevoegen, en producten, categorien en merken toevoegen en aanpassen. 
+
 include("header.php");
 if ($ingelogd) {
     include("connect.php");
-    $userzoek = mysql_query("SELECT * FROM account WHERE account_number=$accountnummer");
+    $userzoek = mysql_query("SELECT * FROM account WHERE account_number='$accountnummer'");
     $gegevens = mysql_fetch_array($userzoek);
 ?>
 <div id="midden">
@@ -12,16 +18,21 @@ if ($ingelogd) {
 			<td style="background-color:#009CEB;width:200px;text-align:top;">
 				<img id="Afbeeld " src="<?php echo mysql_real_escape_string(htmlentities($gegevens['photo'])) ?>" width="100" height= "100"><br/>
 				<b>Account</b><br />
-    <?php if( $rechten > 1 ){ ?>
+    <?php if( $rechten == 3 ){ ?>
 					<a href="account wijzigen.php">Mijn gegevens aanpassen</a><br />
-                    <a href="categorie_toevoegen.php">Categorie toevoegen</a> <br />
-					<a href="categorie_aanpassen.php">Categorie aanpassen</a> <br />
+					<a href="medewerkers_beheren.php">Medewerkers beheren</a><br />
+                    <a href="categorie_toevoegen.php">Categorie toevoegen</a><br />
+					<a href="categorie_aanpassen.php">Categorie aanpassen</a><br />
                     <a href="merk_toevoegen.php">Merk toevoegen</a> <br />
-					<a href="merk_aanpassen.php">Merk Aanpassen</a> <br />
+					<a href="merk_aanpassen.php">Merk aanpassen</a> <br />
                     <a href="product_toevoegen.php">Product toevoegen</a><br /> 
 					<a href="bestellingenbeheren.php">Bestellingen beheren</a>
      <?php } 
-	 else{ ?> 
+	 else if ($rechten == 2){ ?> 
+					<a href="bestellingenbeheren.php">Bestellingen beheren</a>
+                    <a href="account wijzigen.php">Mijn gegevens aanpassen</a>
+	<?php } 
+	 else { ?> 
                     <a href="bestelgeschiedenis.php">Bestelstatus/geschiedenis</a> <br />
                     <a href="winkelwagentje.php">Winkelwagen</a> <br />
                     <a href="account wijzigen.php">Mijn gegevens aanpassen</a>
